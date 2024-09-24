@@ -1,18 +1,14 @@
-import { defaultAbout } from './../constants';
+import { defaultAbout } from '../constants';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
-import {
-  IsEmail,
-  IsString,
-  IsUrl,
-  Length,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsString, IsUrl, Length, MinLength } from 'class-validator';
+import { Comment } from 'src/comments/comment.entity';
 
 @Entity()
 export class User {
@@ -52,4 +48,7 @@ export class User {
   @IsString()
   @MinLength(2)
   password: string;
+
+  @OneToMany(() => Comment, (comment) => comment.owner)
+  comments: Comment[];
 }

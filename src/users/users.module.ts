@@ -4,6 +4,7 @@ import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { JwtAuthGuard } from 'src/auth/guards/jwtAuth.guard';
+import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],

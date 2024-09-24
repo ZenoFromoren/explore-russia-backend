@@ -1,8 +1,12 @@
 import { IsString, IsUrl, Length, MinLength } from 'class-validator';
+import { Comment } from 'src/comments/comment.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -35,4 +39,7 @@ export class Post {
   @Column()
   @IsString()
   text: string;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 }
