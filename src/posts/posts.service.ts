@@ -1,3 +1,5 @@
+import { setDefaultResultOrder } from 'dns';
+import { groupBy } from 'rxjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './post.entity';
@@ -43,7 +45,7 @@ export class PostsService {
   async findById(id: number, relations = null): Promise<Post> {
     const post = await this.postsRepository.findOne({
       where: { id },
-      relations,
+      relations
     });
 
     if (!post) {

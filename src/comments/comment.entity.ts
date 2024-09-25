@@ -1,7 +1,15 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Post } from 'src/posts/post.entity';
 import { User } from 'src/users/user.entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Comment {
