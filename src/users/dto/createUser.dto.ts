@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -15,7 +16,7 @@ export class CreateUserDTO {
   username: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   city: string;
 
   @IsString()
@@ -27,11 +28,19 @@ export class CreateUserDTO {
   avatar: string;
 
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   email: string;
 
   @IsString()
-  @IsNotEmpty()
   @MinLength(2)
+  @IsOptional()
   password: string;
+
+  @IsString()
+  @IsOptional()
+  googleId: string;
+
+  @IsString()
+  @IsOptional()
+  yandexId: string;
 }

@@ -9,6 +9,9 @@ import { CreateUserDTO } from 'src/users/dto/createUser.dto';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { MailerService } from '@nestjs-modules/mailer';
+import { Request } from 'express';
+import { Profile } from 'passport-yandex';
+
 
 @Injectable()
 export class AuthService {
@@ -24,6 +27,13 @@ export class AuthService {
     return user;
   }
 
+  async signupYandex(createUserDTO: { yandexId: string; username: string }) {
+    console.log(`createUserDTO ${JSON.stringify(createUserDTO)}`);
+    const user = await this.usersService.createWithYandex(createUserDTO);
+
+    return user;
+  }
+
   async signin(user: User) {
     const { email, id: sub } = user;
 
@@ -31,15 +41,35 @@ export class AuthService {
       { email, sub },
       { expiresIn: '7d' },
     );
-    // const refreshToken = await this.jwtService.signAsync(
-    //   { email, sub },
-    //   { expiresIn: '7d' },
-    // );
 
     return {
       user,
       accessToken: `Bearer ${accessToken}`,
-      // refreshToken,
+    };
+  }
+
+  async signinYandex(userData) {
+    const yandexId = userData.yandexId;
+    console.log(`user signinYandex ${JSON.stringify(userData)}`);
+
+    // const user = await this.usersService.findOne({ where: {yandexId} });
+    const user = userData.user;
+    const accessToken = userData.accessToken;
+
+    return {
+      user,
+      accessToken
+    };
+  }
+
+  async signinGoogle(req: Request) {
+    if (!req.user) {
+      return 'No user from google';
+    }
+
+    return {
+      message: 'User information from google',
+      user: req.user,
     };
   }
 
@@ -136,5 +166,22 @@ export class AuthService {
     });
 
     return { user, code };
+  }
+
+  async validateFromYandex(profile: Profile) {
+    const email = JSON.stringify(profile.emails[0]['value']);
+    console.log(`email validateFromYandex ${email}`);
+    const user = await this.usersService.findByYandexId(email);
+
+    const createUserDTO = {
+      yandexId: email,
+      username: JSON.stringify(profile.displayName),
+    };
+
+    if (!user) {
+      return await this.usersService.createWithYandex(createUserDTO);
+    }
+
+    return user;
   }
 }

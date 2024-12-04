@@ -26,6 +26,11 @@ export class PostsController {
 
   @Get(':postId')
   async getPostById(@Param('postId') postId: number): Promise<Post> {
-    return await this.postsService.findById(postId, ['comments']);
+    return await this.postsService.findById(postId);
+  }
+
+  @Get(':postId/comments')
+  async getComments(@Param('postId') postId: number) {
+    return await this.postsService.getComments(postId);
   }
 }

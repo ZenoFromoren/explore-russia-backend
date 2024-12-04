@@ -1,3 +1,4 @@
+import { IsEmail } from 'class-validator';
 import {
   ConflictException,
   Injectable,
@@ -43,12 +44,36 @@ export class UsersService {
       );
     }
 
-    const hash = await bcrypt.hash(password, 10);
+    if (password) {
+      const hash = await bcrypt.hash(password, 10);
 
-    const user = this.userRepository.create({
-      ...createUserDTO,
-      password: hash,
-    });
+      const user = this.userRepository.create({
+        ...createUserDTO,
+        password: hash,
+      });
+    }
+    
+    const user = this.userRepository.create(createUserDTO);
+
+    return this.userRepository.save(user);
+  }
+
+  async createWithYandex({ yandexId, username }) {
+    const isUserExist = await this.findByYandexId(yandexId)
+      .then((res) => res);
+
+      console.log(`user exist ${JSON.stringify(await this.findByYandexId(yandexId)
+        .then((res) => res))}`)
+
+    if (isUserExist) {
+      throw new ConflictException(
+        'Данный адрес электронной почты уже зарегистрирован',
+      );
+    }
+
+    const user = this.userRepository.create({ username, yandexId });
+
+    console.log(`create user ${user}`)
 
     return this.userRepository.save(user);
   }
@@ -79,6 +104,15 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('Пользователь не найден');
     }
+
+    return user;
+  }
+
+  async findByYandexId(yandexId: string): Promise<User> {
+    console.log(`yandexId ${yandexId}`)
+    const user = await this.userRepository.findOne({ where: { yandexId } });
+
+    console.log(`user findByYandexId ${JSON.stringify(user)}`)
 
     return user;
   }

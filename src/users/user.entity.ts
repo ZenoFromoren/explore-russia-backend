@@ -7,7 +7,15 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { IsEmail, IsString, IsUrl, Length, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Length,
+  MinLength,
+} from 'class-validator';
 import { Comment } from 'src/comments/comment.entity';
 
 @Entity()
@@ -21,12 +29,12 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ unique: true })
+  @Column()
   @IsString()
   @Length(2, 30)
   username: string;
 
-  @Column()
+  @Column({ default: 'Город не указан' })
   @IsString()
   city: string;
 
@@ -40,14 +48,22 @@ export class User {
   @IsUrl()
   avatar: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, default: null, nullable: true })
   @IsEmail()
   email: string;
 
-  @Column({ select: false })
+  @Column({ select: false, default: null, nullable: true })
   @IsString()
   @MinLength(2)
   password: string;
+
+  @Column({ default: null, nullable: true })
+  @IsString()
+  googleId: string;
+
+  @Column({ default: null, nullable: true })
+  @IsString()
+  yandexId: string;
 
   @OneToMany(() => Comment, (comment) => comment.owner)
   comments: Comment[];

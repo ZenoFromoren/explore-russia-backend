@@ -1,15 +1,20 @@
-import { setDefaultResultOrder } from 'dns';
-import { groupBy } from 'rxjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './post.entity';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { Comment } from '../comments/comment.entity';
+import {
+  DataSource,
+  FindManyOptions,
+  FindOneOptions,
+  Repository,
+} from 'typeorm';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
+    private dataSource: DataSource,
   ) {}
 
   async findOne(query: FindOneOptions): Promise<Post> {
@@ -45,7 +50,7 @@ export class PostsService {
   async findById(id: number, relations = null): Promise<Post> {
     const post = await this.postsRepository.findOne({
       where: { id },
-      relations
+      relations,
     });
 
     if (!post) {
@@ -53,6 +58,16 @@ export class PostsService {
     }
 
     return post;
+  }
+
+  async getComments(id: number) {
+    const post = await this.findById(id);
+
+    const comments = await this.dataSource.manager
+      .getTreeRepository(Comment)
+      .findTrees({ relations: ['owner', 'replies'] });
+
+    return comments;
   }
 
   async searchPosts(query: string): Promise<Post[]> {

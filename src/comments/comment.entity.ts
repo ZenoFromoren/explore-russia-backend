@@ -8,10 +8,14 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Tree,
+  TreeChildren,
+  TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
+@Tree('closure-table')
 export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,6 +31,9 @@ export class Comment {
   @IsNotEmpty()
   text: string;
 
+  @Column({ nullable: true })
+  parentId: number;
+
   @ManyToOne(() => User, (user) => user.comments, {
     eager: true,
   })
@@ -35,6 +42,15 @@ export class Comment {
   @ManyToOne(() => Post, (post) => post.comments)
   post: Post;
 
-  @OneToMany(() => Comment, (comment) => comment.replies)
+  @TreeChildren()
   replies: Comment[];
+
+  @TreeParent()
+  parent: Comment;
+
+//     @OneToMany(() => Comment, (comment) => comment.parent, {eager: true})
+//     replies: Comment[];
+
+//     @ManyToOne(() => Comment, (comment) => comment.replies)
+//     parent: Comment;
 }

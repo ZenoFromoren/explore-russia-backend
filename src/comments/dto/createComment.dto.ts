@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import { User } from 'src/users/user.entity';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateCommentDTO {
   @IsString()
@@ -11,4 +10,8 @@ export class CreateCommentDTO {
 
   @IsNotEmpty()
   postId: number;
+
+  @IsNumber()
+  @IsOptional()
+  parentId: number;
 }
