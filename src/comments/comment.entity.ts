@@ -6,7 +6,6 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   Tree,
   TreeChildren,
@@ -39,18 +38,12 @@ export class Comment {
   })
   owner: User;
 
-  @ManyToOne(() => Post, (post) => post.comments)
-  post: Post;
+  @Column()
+  post: number;
 
   @TreeChildren()
   replies: Comment[];
 
   @TreeParent()
   parent: Comment;
-
-//     @OneToMany(() => Comment, (comment) => comment.parent, {eager: true})
-//     replies: Comment[];
-
-//     @ManyToOne(() => Comment, (comment) => comment.replies)
-//     parent: Comment;
 }

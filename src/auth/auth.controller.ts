@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/localAuth.guard';
 import { CreateUserDTO } from 'src/users/dto/createUser.dto';
@@ -42,14 +34,12 @@ export class AuthController {
   @UseGuards(YandexAuthGuard)
   @Get('yandex/callback')
   async yandexCallback(@Req() req) {
-    // console.log(`yandex/callback ${JSON.stringify(await this.authService.signinYandex(req.user))}`)
     return req.user;
   }
 
   @Post('signup')
   async signup(@Body() createUserDTO: CreateUserDTO) {
     const user = await this.authService.signup(createUserDTO);
-
     return await this.authService.signin(user);
   }
 

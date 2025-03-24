@@ -23,13 +23,13 @@ export class UsersController {
 
   @Get('me')
   async getProfileData(@Req() req): Promise<User> {
+    console.log(req)
     return await this.usersService.findUserById(req.user.id);
   }
 
   @Patch('me')
   async updateProfileData(@Req() req, @Body() updateUserDTO: UpdateUserDTO) {
     await this.usersService.updateProfileData(req.user.id, updateUserDTO);
-
     return await this.usersService.findUserById(req.user.id);
   }
 }

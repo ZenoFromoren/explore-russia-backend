@@ -1,4 +1,3 @@
-import { IsEmail } from 'class-validator';
 import {
   ConflictException,
   Injectable,
@@ -7,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { FindManyOptions, FindOneOptions, Not, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/createUser.dto';
 import { UpdateUserDTO } from './dto/updateUser.dto';
 import * as bcrypt from 'bcryptjs';

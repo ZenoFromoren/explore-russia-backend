@@ -61,11 +61,8 @@ export class CommentsService {
 
   async create(createCommentDTO: CreateCommentDTO): Promise<Comment> {
     const { text, userId, postId } = createCommentDTO;
-
     const owner = await this.usersService.findUserById(userId);
-    const post = await this.postsService.findById(postId);
-
-    const newComment = this.commentsRepository.create({ text, owner, post });
+    const newComment = this.commentsRepository.create({ text, owner, post: postId });
 
     return await this.commentsRepository.save(newComment);
   }
@@ -80,7 +77,7 @@ export class CommentsService {
     const parent = await this.findById(parentId);
 
     comment.text = text;
-    comment.post = post;
+    comment.post = post.id;
     comment.owner = owner;
     comment.parent = parent;
 

@@ -60,12 +60,10 @@ export class PostsService {
     return post;
   }
 
-  async getComments(id: number) {
-    const post = await this.findById(id);
-
-    const comments = await this.dataSource.manager
+  async getComments(postId: number) {
+    const comments = (await this.dataSource.manager
       .getTreeRepository(Comment)
-      .findTrees({ relations: ['owner', 'replies'] });
+      .findTrees({ relations: ['owner', 'replies'] })).filter((comment) => comment.post === postId);
 
     return comments;
   }

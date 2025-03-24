@@ -23,14 +23,11 @@ export class AuthService {
 
   async signup(createUserDTO: CreateUserDTO) {
     const user = await this.usersService.create(createUserDTO);
-
     return user;
   }
 
   async signupYandex(createUserDTO: { yandexId: string; username: string }) {
-    console.log(`createUserDTO ${JSON.stringify(createUserDTO)}`);
     const user = await this.usersService.createWithYandex(createUserDTO);
-
     return user;
   }
 
@@ -50,9 +47,6 @@ export class AuthService {
 
   async signinYandex(userData) {
     const yandexId = userData.yandexId;
-    console.log(`user signinYandex ${JSON.stringify(userData)}`);
-
-    // const user = await this.usersService.findOne({ where: {yandexId} });
     const user = userData.user;
     const accessToken = userData.accessToken;
 
@@ -137,7 +131,7 @@ export class AuthService {
 
     await this.mailerService.sendMail({
       to: email,
-      subject: 'Подтверждение рагистрации на explore-russia.ru',
+      subject: 'Подтверждение регистрации на explore-russia.ru',
       template: 'confirm-registration',
       context: {
         username,
